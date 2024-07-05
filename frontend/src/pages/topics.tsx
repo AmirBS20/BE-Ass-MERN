@@ -1,8 +1,8 @@
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { Topic as TopicModel } from "../models/topics.model";
 import * as TopicsAPI from "../network/topics_api";
 import Topic from "../components/topics.component";
-import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
 import styles from "../styles/topicspage.module.css";
 import styleUtils from "../styles/utils.module.css";
 import { FaPlus } from "react-icons/fa";

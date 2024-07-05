@@ -1,19 +1,22 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { signIn } from 'next-auth/react';  // Replace with your actual auth library
 
 export default function Home() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await signIn('credentials', { email, password });
-
-    if (res?.ok) {
-      navigate('/topics');
-    } else {
+    try {
+      const res = await axios.post('/api/auth/login', { username, password }, { withCredentials: true });
+      if (res.status === 201) {
+        navigate('/topics');
+      } else {
+        alert('Failed to sign in');
+      }
+    } catch (error) {
       alert('Failed to sign in');
     }
   };
@@ -24,17 +27,17 @@ export default function Home() {
         <h1 className="text-4xl mb-8">Sign In</h1>
         <form className="w-full max-w-md" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-300 text-sm font-bold mb-2">
-              Email
+            <label htmlFor="username" className="block text-gray-300 text-sm font-bold mb-2">
+              Username
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              id="username"
+              name="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter your email"
+              placeholder="Enter your username"
             />
           </div>
           <div className="mb-6">

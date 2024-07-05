@@ -12,7 +12,7 @@ import MongoStore from 'connect-mongo';
 const app = express();
 
 // middleware
-app.use(morgan("dev"));
+app.use(morgan("dev")); // rendering HTTP Codes
 app.use(express.json());
 
 //session
@@ -30,7 +30,6 @@ app.use(session({
 //routes
 app.use("/api/topics", topicRoutes);
 app.use("/api/auth", userRoutes);
-
 
 app.use((req, res, next) => {
     next(createHttpError(404, "Endpoint not found"));
