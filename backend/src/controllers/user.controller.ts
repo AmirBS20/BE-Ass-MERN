@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import UserModel from "../models/user.model";
 import bcrypt from "bcrypt";
 
-// Typing for express-session
+// Typing for express-session -> userId not detected
 declare module 'express-session' {
   interface SessionData {
     userId?: string;
@@ -37,6 +37,8 @@ interface SignUpBody {
     password?: string;
 }
 
+
+// registration with verifications 
 export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (req, res, next) => {
     const { username, email, password: passwordRaw } = req.body;
 
@@ -58,6 +60,7 @@ export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = asy
             throw createHttpError(409, "A user with this email address already exists. Please log in instead.");
         }
 
+        // hashing the password with bcrypt
         const passwordHashed = await bcrypt.hash(passwordRaw, 10);
 
         const newUser = await UserModel.create({
@@ -80,6 +83,7 @@ interface LoginBody {
     password?: string;
 }
 
+// login by comparing with DB
 export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async (req, res, next) => {
     const { username, password } = req.body;
 
@@ -104,6 +108,7 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
     }
 };
 
+// destroying the session when logging out
 export const logout: RequestHandler = (req, res, next) => {
     try {
         console.log("logout called"); // Log
